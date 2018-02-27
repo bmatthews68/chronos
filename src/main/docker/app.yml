@@ -1,0 +1,21 @@
+version: '2'
+services:
+    chronos-app:
+        image: chronos
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod,swagger
+            - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/eureka
+            - SPRING_CLOUD_CONFIG_URI=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/config
+            - SPRING_DATA_MONGODB_URI=mongodb://chronos-mongodb:27017
+            - SPRING_DATA_MONGODB_DATABASE=chronos
+            - JHIPSTER_SLEEP=30 # gives time for the JHipster Registry to boot before the application
+    chronos-mongodb:
+        extends:
+            file: mongodb.yml
+            service: chronos-mongodb
+    jhipster-registry:
+        extends:
+            file: jhipster-registry.yml
+            service: jhipster-registry
+        environment:
+            - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS=file:./central-config/docker-config/
